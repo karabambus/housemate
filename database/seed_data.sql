@@ -7,10 +7,10 @@
 -- =============================================================================
 
 INSERT INTO users (user_id, email, password_hash, first_name, last_name) VALUES
-(1, 'marin@test.com', '$2b$12$K1C7LmKXgFxVhQv6CqHjPO9QcJ4wEWdU2aH1IgxYvzKhMzQr5Qk7C', 'Marin', 'Student'),
-(2, 'ana@test.com', '$2b$12$K1C7LmKXgFxVhQv6CqHjPO9QcJ4wEWdU2aH1IgxYvzKhMzQr5Qk7C', 'Ana', 'Kovač'),
-(3, 'ivan@test.com', '$2b$12$K1C7LmKXgFxVhQv6CqHjPO9QcJ4wEWdU2aH1IgxYvzKhMzQr5Qk7C', 'Ivan', 'Horvat'),
-(4, 'marija@test.com', '$2b$12$K1C7LmKXgFxVhQv6CqHjPO9QcJ4wEWdU2aH1IgxYvzKhMzQr5Qk7C', 'Marija', 'Novak');
+(1, 'marin@test.com', '$2b$12$HO71VYOeSbMnqBsw8byQCOChh.qlyOkJpNap6qcFN5PiLlKu9jcsO', 'Marin', 'Student'),
+(2, 'ana@test.com', '$2b$12$HO71VYOeSbMnqBsw8byQCOChh.qlyOkJpNap6qcFN5PiLlKu9jcsO', 'Ana', 'Kovač'),
+(3, 'ivan@test.com', '$2b$12$HO71VYOeSbMnqBsw8byQCOChh.qlyOkJpNap6qcFN5PiLlKu9jcsO', 'Ivan', 'Horvat'),
+(4, 'marija@test.com', '$2b$12$HO71VYOeSbMnqBsw8byQCOChh.qlyOkJpNap6qcFN5PiLlKu9jcsO', 'Marija', 'Novak');
 
 -- =============================================================================
 -- Test Households

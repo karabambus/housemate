@@ -6,6 +6,9 @@ Demonstrates SOLID principles through clean architecture.
 """
 
 from flask import Flask, render_template, session, redirect, url_for, flash, request
+from src.services.auth_service import AuthService
+from src.repositories.user_repository import UserRepository
+from src.infrastructure.database import get_db
 from pathlib import Path
 import config
 
@@ -16,6 +19,34 @@ app.config.from_object(config)
 # Ensure upload folder exists
 Path(config.UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
 
+# Initialize repositories and services
+db = get_db()
+user_repository = UserRepository(db)
+auth_service = AuthService(user_repository)  # Token service not implemented yet
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        user = auth_service.login(email, password)
+
+        if user:
+            session['user_id'] = user.user_id
+            session['user_name'] = user.get_full_name()
+            session['user_email'] = user.email
+            flash('Logged in successfully!', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid email or password', 'danger')
+    return render_template('auth/login.html')
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('index'))
 
 @app.route('/')
 def index():
