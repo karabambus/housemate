@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}{{ bill.title }} - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <!-- Back Button -->
+        <div class="mb-3">
+            <a href="{{ url_for('bills_list') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Bills
+            </a>
+        </div>
+
+        <!-- Bill Details Card -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">
+                    <i class="bi bi-receipt"></i> {{ bill.title }}
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Total Amount</label>
+                        <h4 class="text-primary">${{ "%.2f"|format(bill.amount) }}</h4>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="text-muted small">Payment Status</label>
+                        <div>
+                            {% if bill.is_paid() %}
+                                <span class="badge bg-success" style="font-size: 1.1em;">
+                                    <i class="bi bi-check-circle"></i> Paid
+                                </span>
+                            {% elif bill.is_pending() %}
+                                <span class="badge bg-warning" style="font-size: 1.1em;">
+                                    <i class="bi bi-clock"></i> Pending
+                                </span>
+                            {% else %}
+                                <span class="badge bg-danger" style="font-size: 1.1em;">
+                                    <i class="bi bi-exclamation-triangle"></i> Overdue
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="text-muted small">Category</label>
+                        <div>
+                            <span class="badge bg-secondary">
+                                {{ bill.get_category_display() }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="text-muted small">Due Date</label>
+                        <div>{{ bill.due_date or 'No due date' }}</div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="text-muted small">Created</label>
+                        <div>{{ bill.created_at or 'N/A' }}</div>
+                    </div>
+                </div>
+
+                {% if bill.is_recurring %}
+                <div class="alert alert-info">
+                    <i class="bi bi-arrow-repeat"></i>
+                    <strong>Recurring Bill:</strong> {{ bill.frequency or 'monthly' }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Cost Distribution Card (from seed data) -->
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-diagram-3"></i> Cost Distribution
+                    <small class="float-end">SOLID: Strategy Pattern</small>
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Note:</strong> Distribution data shown from seed database. Live distribution calculation will be implemented in next iteration.
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Participant</th>
+                                <th>Strategy</th>
+                                <th>Amount Owed</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Example based on seed data structure -->
+                            <tr>
+                                <td>Marin Student</td>
+                                <td><span class="badge bg-info">Equal Split</span></td>
+                                <td><strong>${{ "%.2f"|format(bill.amount / 3) }}</strong></td>
+                                <td>
+                                    {% if bill.is_paid() %}
+                                        <span class="badge bg-success">Paid</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Pending</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Ana Kovač</td>
+                                <td><span class="badge bg-info">Equal Split</span></td>
+                                <td><strong>${{ "%.2f"|format(bill.amount / 3) }}</strong></td>
+                                <td>
+                                    {% if bill.is_paid() %}
+                                        <span class="badge bg-success">Paid</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Pending</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Ivan Horvat</td>
+                                <td><span class="badge bg-info">Equal Split</span></td>
+                                <td><strong>${{ "%.2f"|format(bill.amount / 3) }}</strong></td>
+                                <td>
+                                    {% if bill.is_paid() %}
+                                        <span class="badge bg-success">Paid</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Pending</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                                <th colspan="2">Total</th>
+                                <th>${{ "%.2f"|format(bill.amount) }}</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOLID Demonstration Card -->
+        <div class="card shadow-sm mt-4 border-success">
+            <div class="card-body">
+                <h6 class="text-success">
+                    <i class="bi bi-code-square"></i> SOLID Principles in This View
+                </h6>
+                <ul class="small mb-0">
+                    <li><strong>S (Single Responsibility):</strong> BillRepository fetched this bill from database</li>
+                    <li><strong>O (Open/Closed):</strong> Distribution can use any strategy (Equal, Percentage, Fixed)</li>
+                    <li><strong>L (Liskov Substitution):</strong> All strategies produce same output format</li>
+                    <li><strong>D (Dependency Inversion):</strong> BillService coordinated retrieval via abstraction</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-4 d-flex gap-2">
+            <a href="{{ url_for('bills_list') }}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+            <form method="POST" action="{{ url_for('bills_delete', bill_id=bill.bill_id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this bill?');">
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Delete Bill
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

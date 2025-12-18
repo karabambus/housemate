@@ -19,10 +19,24 @@ app.config.from_object(config)
 # Ensure upload folder exists
 Path(config.UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
 
-# Initialize repositories and services
+# Initialize repositories and services (Dependency Injection - SOLID D)
 db = get_db()
+
+# Authentication
 user_repository = UserRepository(db)
-auth_service = AuthService(user_repository)  # Token service not implemented yet
+auth_service = AuthService(user_repository)
+
+# Bills (SOLID demonstration)
+from src.repositories.bill_repository import BillRepository
+from src.validators.bill_validator import BillValidator
+from src.services.cost_calculator import CostCalculator
+from src.services.bill_service import BillService
+from src.strategies import EqualDistributionStrategy, PercentageDistributionStrategy, FixedDistributionStrategy
+
+bill_repository = BillRepository(db)
+bill_validator = BillValidator()
+cost_calculator = CostCalculator()
+bill_service = BillService(bill_repository, bill_validator, cost_calculator)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -68,6 +82,128 @@ def index():
 def about():
     """About page explaining SOLID principles in this project."""
     return render_template('about.html')
+
+
+# ============================================================================
+# Bills Routes (Cost Distribution Module - SOLID Demonstration)
+# ============================================================================
+
+@app.route('/bills')
+def bills_list():
+    """
+    List all bills for user's household.
+    Demonstrates SOLID principles working together.
+    """
+    if 'user_id' not in session:
+        flash('Please log in to view bills.', 'warning')
+        return redirect(url_for('login'))
+
+    # Get user's household (from seed data, user 1 is in household 1)
+    household_id = 1  # TODO: Get from user's household membership
+    bills = bill_service.get_household_bills(household_id)
+
+    return render_template('bills/list.html', bills=bills)
+
+
+@app.route('/bills/create', methods=['GET', 'POST'])
+def bills_create():
+    """
+    Create a new bill and distribute costs.
+    Demonstrates all SOLID principles.
+    """
+    if 'user_id' not in session:
+        flash('Please log in to create bills.', 'warning')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        try:
+            # Get form data
+            title = request.form['title']
+            amount = float(request.form['amount'])
+            category = request.form.get('category', 'other')
+            strategy_type = request.form['strategy']
+
+            # Create bill (SOLID S, D: BillService coordinates)
+            bill_id = bill_service.create_bill(
+                household_id=1,  # TODO: Get from user's household
+                payer_id=session['user_id'],
+                title=title,
+                amount=amount,
+                category=category
+            )
+
+            # Distribute costs using selected strategy (SOLID O, L)
+            participants = [1, 2, 3]  # TODO: Get from household members
+
+            if strategy_type == 'equal':
+                strategy = EqualDistributionStrategy()
+                distribution = bill_service.distribute_bill(bill_id, strategy, participants)
+            elif strategy_type == 'percentage':
+                # Get percentages from form
+                params = {
+                    1: float(request.form.get('percent_1', 33.33)),
+                    2: float(request.form.get('percent_2', 33.33)),
+                    3: float(request.form.get('percent_3', 33.34))
+                }
+                strategy = PercentageDistributionStrategy()
+                distribution = bill_service.distribute_bill(bill_id, strategy, participants, params)
+            else:  # fixed
+                # Get fixed amounts from form
+                params = {
+                    1: float(request.form.get('fixed_1', amount/3)),
+                    2: float(request.form.get('fixed_2', amount/3)),
+                    3: float(request.form.get('fixed_3', amount/3))
+                }
+                strategy = FixedDistributionStrategy()
+                distribution = bill_service.distribute_bill(bill_id, strategy, participants, params)
+
+            flash(f'Bill "{title}" created and distributed successfully!', 'success')
+            return redirect(url_for('bills_detail', bill_id=bill_id))
+
+        except ValueError as e:
+            flash(f'Error creating bill: {str(e)}', 'danger')
+        except Exception as e:
+            flash(f'Unexpected error: {str(e)}', 'danger')
+
+    return render_template('bills/create.html')
+
+
+@app.route('/bills/<int:bill_id>')
+def bills_detail(bill_id):
+    """
+    Show bill details and cost distribution.
+    """
+    if 'user_id' not in session:
+        flash('Please log in to view bill details.', 'warning')
+        return redirect(url_for('login'))
+
+    bill = bill_service.get_bill(bill_id)
+
+    if not bill:
+        flash('Bill not found.', 'danger')
+        return redirect(url_for('bills_list'))
+
+    return render_template('bills/detail.html', bill=bill)
+
+
+@app.route('/bills/<int:bill_id>/delete', methods=['POST'])
+def bills_delete(bill_id):
+    """
+    Delete a bill.
+    """
+    if 'user_id' not in session:
+        flash('Please log in to delete bills.', 'warning')
+        return redirect(url_for('login'))
+
+    bill = bill_service.get_bill(bill_id)
+
+    if not bill:
+        flash('Bill not found.', 'danger')
+        return redirect(url_for('bills_list'))
+
+    bill_service.delete_bill(bill_id)
+    flash(f'Bill "{bill.title}" deleted successfully.', 'success')
+    return redirect(url_for('bills_list'))
 
 
 @app.errorhandler(404)

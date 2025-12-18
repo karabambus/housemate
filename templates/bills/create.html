@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Create Bill - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h2 class="card-title mb-4">
+                    <i class="bi bi-plus-circle"></i> Create New Bill
+                </h2>
+
+                <form method="POST" action="{{ url_for('bills_create') }}" id="billForm">
+                    <!-- Bill Details -->
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Bill Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="title" name="title" required placeholder="e.g., Rent - January 2025">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="amount" class="form-label">Amount <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" id="amount" name="amount" step="0.01" min="0.01" required placeholder="0.00">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="category" class="form-label">Category</label>
+                            <select class="form-select" id="category" name="category">
+                                <option value="rent">Rent</option>
+                                <option value="utilities">Utilities</option>
+                                <option value="food">Food</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- Distribution Strategy (SOLID O, L Demonstration) -->
+                    <h5 class="mb-3">
+                        <i class="bi bi-diagram-3"></i> Cost Distribution Strategy
+                        <small class="text-muted">(SOLID: Open/Closed, Liskov)</small>
+                    </h5>
+
+                    <div class="mb-3">
+                        <label class="form-label">Select Strategy <span class="text-danger">*</span></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="strategy" id="strategyEqual" value="equal" checked onchange="updateStrategyFields()">
+                            <label class="form-check-label" for="strategyEqual">
+                                <strong>Equal Distribution</strong>
+                                <small class="d-block text-muted">Split amount equally among all participants</small>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="strategy" id="strategyPercentage" value="percentage" onchange="updateStrategyFields()">
+                            <label class="form-check-label" for="strategyPercentage">
+                                <strong>Percentage Distribution</strong>
+                                <small class="d-block text-muted">Split by custom percentages (must total 100%)</small>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="strategy" id="strategyFixed" value="fixed" onchange="updateStrategyFields()">
+                            <label class="form-check-label" for="strategyFixed">
+                                <strong>Fixed Amount Distribution</strong>
+                                <small class="d-block text-muted">Each person pays a specific amount</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Percentage Fields (hidden by default) -->
+                    <div id="percentageFields" style="display: none;">
+                        <div class="alert alert-info small">
+                            <i class="bi bi-info-circle"></i> Percentages must total 100%
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Marin Student (%)</label>
+                                <input type="number" class="form-control" name="percent_1" step="0.01" min="0" max="100" value="33.33">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Ana Kovač (%)</label>
+                                <input type="number" class="form-control" name="percent_2" step="0.01" min="0" max="100" value="33.33">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Ivan Horvat (%)</label>
+                                <input type="number" class="form-control" name="percent_3" step="0.01" min="0" max="100" value="33.34">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fixed Amount Fields (hidden by default) -->
+                    <div id="fixedFields" style="display: none;">
+                        <div class="alert alert-info small">
+                            <i class="bi bi-info-circle"></i> Fixed amounts will be scaled proportionally if they don't match the total
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Marin Student ($)</label>
+                                <input type="number" class="form-control" name="fixed_1" step="0.01" min="0">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Ana Kovač ($)</label>
+                                <input type="number" class="form-control" name="fixed_2" step="0.01" min="0">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Ivan Horvat ($)</label>
+                                <input type="number" class="form-control" name="fixed_3" step="0.01" min="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Buttons -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a href="{{ url_for('bills_list') }}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle"></i> Create Bill
+                        </button>
+                    </div>
+                </form>
+
+                <!-- SOLID Explanation -->
+                <div class="card mt-4 bg-light border-success">
+                    <div class="card-body">
+                        <h6 class="text-success"><i class="bi bi-lightbulb"></i> SOLID Principles Demonstrated</h6>
+                        <p class="small mb-2">This form demonstrates:</p>
+                        <ul class="small mb-0">
+                            <li><strong>O (Open/Closed):</strong> You can select different strategies without changing the code</li>
+                            <li><strong>L (Liskov Substitution):</strong> All 3 strategies are interchangeable</li>
+                            <li><strong>S (Single Responsibility):</strong> BillValidator validates, BillService coordinates, CostCalculator calculates</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function updateStrategyFields() {
+    const strategy = document.querySelector('input[name="strategy"]:checked').value;
+
+    document.getElementById('percentageFields').style.display =
+        strategy === 'percentage' ? 'block' : 'none';
+
+    document.getElementById('fixedFields').style.display =
+        strategy === 'fixed' ? 'block' : 'none';
+}
+
+// Update fixed amount fields when total amount changes
+document.getElementById('amount').addEventListener('input', function() {
+    if (document.getElementById('strategyFixed').checked) {
+        const total = parseFloat(this.value) || 0;
+        const perPerson = (total / 3).toFixed(2);
+        document.querySelector('input[name="fixed_1"]').value = perPerson;
+        document.querySelector('input[name="fixed_2"]').value = perPerson;
+        document.querySelector('input[name="fixed_3"]').value = perPerson;
+    }
+});
+</script>
+{% endblock %}
