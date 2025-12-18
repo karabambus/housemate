@@ -1,89 +1,81 @@
 """
-Cost Calculator Service (INITIAL VERSION - VIOLATES SOLID)
+Cost Calculator Service (REFACTORED VERSION - FOLLOWS SOLID)
 
-This is the "BEFORE" version demonstrating POOR design.
+This is the "AFTER" version demonstrating GOOD design using Strategy Pattern.
 
-SOLID Violations:
-- ❌ VIOLATES Open/Closed (O): Adding new strategy requires MODIFYING this class
-- ❌ VIOLATES Single Responsibility (S): This class knows ALL distribution logic
-- ❌ Hard to test: Must test all strategies in one class
-- ❌ Hard to extend: New strategy = modify calculate() method
+SOLID Principles Demonstrated:
+- ✓ FOLLOWS Open/Closed (O): New strategies can be added without modifying this class
+- ✓ FOLLOWS Single Responsibility (S): This class only coordinates, doesn't know distribution logic
+- ✓ FOLLOWS Liskov Substitution (L): All strategies are interchangeable
+- ✓ Easy to test: Each strategy tested independently
+- ✓ Easy to extend: New strategy = create new class, no changes here
 
-This will be refactored to follow SOLID principles in the next commit.
+Refactored from if/else chain to Strategy Pattern.
 """
 
 from typing import List, Dict
+from src.interfaces.i_cost_strategy import ICostDistributionStrategy
 
 
 class CostCalculator:
     """
-    Calculates cost distribution for bills.
+    Calculates cost distribution using Strategy Pattern.
 
-    WARNING: This design violates Open/Closed Principle!
+    SOLID (O): Open for extension (add new strategies), closed for modification
+    SOLID (S): Single responsibility - coordinate strategies, don't implement them
+    SOLID (D): Depends on ICostDistributionStrategy abstraction, not concrete classes
+
+    Usage:
+        calculator = CostCalculator()
+        strategy = EqualDistributionStrategy()
+        result = calculator.calculate_with_strategy(strategy, 300.00, [1, 2, 3])
     """
 
-    def calculate(self, strategy_type: str, total_amount: float,
-                  participants: List[int], distribution_params: Dict = None) -> Dict[int, float]:
+    def calculate_with_strategy(
+        self,
+        strategy: ICostDistributionStrategy,
+        total_amount: float,
+        participants: List[int],
+        distribution_params: Dict = None
+    ) -> Dict[int, float]:
         """
-        Calculate how much each participant owes.
+        Calculate cost distribution using the provided strategy.
 
-        PROBLEM: Uses if/else chain - adding new strategy requires modifying this method!
+        ✓ SOLID (O): Adding new strategy requires ZERO changes to this method!
+        ✓ SOLID (L): Any ICostDistributionStrategy implementation works here
 
         Args:
-            strategy_type: "equal", "percentage", or "fixed"
+            strategy: The distribution strategy to use (any ICostDistributionStrategy)
             total_amount: Total bill amount
             participants: List of user IDs
             distribution_params: Strategy-specific parameters
 
         Returns:
             Dictionary mapping user_id -> amount_owed
+
+        Example:
+            # Use equal distribution
+            equal = EqualDistributionStrategy()
+            result = calculator.calculate_with_strategy(equal, 300, [1, 2, 3])
+
+            # Switch to percentage - NO CODE CHANGES needed!
+            percentage = PercentageDistributionStrategy()
+            result = calculator.calculate_with_strategy(
+                percentage, 300, [1, 2, 3],
+                {1: 50.0, 2: 30.0, 3: 20.0}
+            )
         """
-        # ❌ VIOLATION: if/else chain for each strategy type
-        # Adding "weighted" or "income-based" strategy requires CHANGING this code!
+        # Delegate to strategy - this class doesn't know HOW distribution works
+        return strategy.calculate(total_amount, participants, distribution_params)
 
-        if strategy_type == "equal":
-            # Equal distribution logic
-            num_participants = len(participants)
-            equal_share = round(total_amount / num_participants, 2)
-            total_distributed = equal_share * num_participants
-            rounding_diff = round(total_amount - total_distributed, 2)
+    def get_strategy_name(self, strategy: ICostDistributionStrategy) -> str:
+        """
+        Get the name of the current strategy.
 
-            result = {}
-            for i, user_id in enumerate(participants):
-                if i == 0:
-                    result[user_id] = round(equal_share + rounding_diff, 2)
-                else:
-                    result[user_id] = equal_share
-            return result
+        Args:
+            strategy: The distribution strategy
 
-        elif strategy_type == "percentage":
-            # Percentage distribution logic
-            if not distribution_params:
-                raise ValueError("Percentages required for percentage distribution")
-
-            total_percentage = sum(distribution_params[user_id] for user_id in participants)
-            if round(total_percentage, 2) != 100.0:
-                raise ValueError("Percentages must sum to 100")
-
-            result = {}
-            for user_id in participants:
-                percentage = distribution_params[user_id]
-                result[user_id] = round((percentage / 100.0) * total_amount, 2)
-            return result
-
-        elif strategy_type == "fixed":
-            # Fixed amount distribution logic
-            if not distribution_params:
-                raise ValueError("Fixed amounts required for fixed distribution")
-
-            total_fixed = sum(distribution_params[user_id] for user_id in participants)
-            if round(total_fixed, 2) != round(total_amount, 2):
-                raise ValueError("Fixed amounts must equal total")
-
-            result = {}
-            for user_id in participants:
-                result[user_id] = round(distribution_params[user_id], 2)
-            return result
-
-        else:
-            raise ValueError(f"Unknown strategy type: {strategy_type}")
+        Returns:
+            Strategy name
+        """
+        return strategy.get_strategy_name()
