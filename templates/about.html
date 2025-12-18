@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}About SOLID Principles - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <h1 class="display-5 mb-4">
+            <i class="bi bi-code-square"></i>
+            SOLID Principles in HouseMate
+        </h1>
+
+        <p class="lead">
+            This project demonstrates all 5 SOLID principles through a working student housing management application.
+        </p>
+
+        <hr class="my-4">
+
+        <!-- Single Responsibility -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">
+                    <span class="badge bg-white text-success">S</span>
+                    Single Responsibility Principle
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <strong>Definition:</strong> A class should have only one reason to change.
+                </p>
+                <p class="card-text">
+                    <strong>Implementation in HouseMate:</strong>
+                </p>
+                <ul>
+                    <li><code>BillRepository</code> - Database operations ONLY</li>
+                    <li><code>BillValidator</code> - Validation logic ONLY</li>
+                    <li><code>BillService</code> - Business logic coordination ONLY</li>
+                    <li><code>BillController</code> - HTTP request handling ONLY</li>
+                </ul>
+                <div class="alert alert-success">
+                    <strong>Example:</strong> If we need to change the database from SQLite to PostgreSQL,
+                    we only modify <code>BillRepository</code>, not the service or controller.
+                </div>
+            </div>
+        </div>
+
+        <!-- Open/Closed -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-white">
+                <h4 class="mb-0">
+                    <span class="badge bg-white text-warning">O</span>
+                    Open/Closed Principle
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <strong>Definition:</strong> Software entities should be open for extension but closed for modification.
+                </p>
+                <p class="card-text">
+                    <strong>Implementation in HouseMate:</strong>
+                </p>
+                <p>Cost distribution uses the <strong>Strategy Pattern</strong>:</p>
+                <ul>
+                    <li><code>EqualDistributionStrategy</code> - Split costs equally</li>
+                    <li><code>PercentageDistributionStrategy</code> - Split by percentages</li>
+                    <li><code>FixedAmountDistributionStrategy</code> - Fixed amounts per person</li>
+                </ul>
+                <div class="alert alert-warning">
+                    <strong>Example:</strong> Adding a new strategy (e.g., weighted by income) requires
+                    ZERO changes to existing code. Just create a new class implementing
+                    <code>ICostDistributionStrategy</code>.
+                </div>
+            </div>
+        </div>
+
+        <!-- Liskov Substitution -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">
+                    <span class="badge bg-white text-info">L</span>
+                    Liskov Substitution Principle
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <strong>Definition:</strong> Subtypes must be substitutable for their base types.
+                </p>
+                <p class="card-text">
+                    <strong>Implementation in HouseMate:</strong>
+                </p>
+                <p>All cost distribution strategies are fully substitutable:</p>
+                <ul>
+                    <li>Any strategy can be swapped at runtime</li>
+                    <li><code>BillService</code> works identically with any strategy</li>
+                    <li>No special handling needed for different strategies</li>
+                </ul>
+                <div class="alert alert-info">
+                    <strong>Example:</strong> The system can switch from equal distribution to percentage
+                    distribution without any code changes - just pass a different strategy instance.
+                </div>
+            </div>
+        </div>
+
+        <!-- Interface Segregation -->
+        <div class="card mb-4">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">
+                    <span class="badge bg-white text-danger">I</span>
+                    Interface Segregation Principle
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <strong>Definition:</strong> Clients should not be forced to depend on interfaces they don't use.
+                </p>
+                <p class="card-text">
+                    <strong>Implementation in HouseMate:</strong>
+                </p>
+                <p>Multiple small, focused interfaces instead of one large interface:</p>
+                <ul>
+                    <li><code>IRepository</code> - Only CRUD operations</li>
+                    <li><code>IValidator</code> - Only validation methods</li>
+                    <li><code>INotificationSender</code> - Only notification methods</li>
+                    <li><code>ICostCalculator</code> - Only calculation methods</li>
+                </ul>
+                <div class="alert alert-danger">
+                    <strong>Example:</strong> A class that only needs to validate data depends on
+                    <code>IValidator</code> (2 methods), not a "fat" interface with 20+ methods.
+                </div>
+            </div>
+        </div>
+
+        <!-- Dependency Inversion -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <span class="badge bg-white text-primary">D</span>
+                    Dependency Inversion Principle
+                </h4>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <strong>Definition:</strong> High-level modules should not depend on low-level modules.
+                    Both should depend on abstractions.
+                </p>
+                <p class="card-text">
+                    <strong>Implementation in HouseMate:</strong>
+                </p>
+                <p><code>BillService</code> depends on interfaces, not concrete classes:</p>
+                <ul>
+                    <li>Depends on <code>IRepository</code>, not <code>BillRepository</code></li>
+                    <li>Depends on <code>IValidator</code>, not <code>BillValidator</code></li>
+                    <li>Dependencies injected via constructor</li>
+                </ul>
+                <div class="alert alert-primary">
+                    <strong>Example:</strong> We can easily swap <code>BillRepository</code> for
+                    <code>MockRepository</code> during testing, without changing <code>BillService</code> code.
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Info -->
+        <div class="card bg-light mt-5">
+            <div class="card-body">
+                <h4 class="card-title">Project Information</h4>
+                <p><strong>Course:</strong> Programsko inženjerstvo (Software Engineering)</p>
+                <p><strong>Assignment:</strong> Demonstrate all 5 SOLID principles in working code</p>
+                <p><strong>Technology Stack:</strong></p>
+                <ul>
+                    <li>Backend: Flask (Python)</li>
+                    <li>Database: SQLite</li>
+                    <li>Frontend: Bootstrap 5</li>
+                    <li>Deployment: Docker</li>
+                </ul>
+                <p class="mb-0">
+                    <a href="https://github.com/anthropics/claude-code" class="btn btn-outline-primary">
+                        <i class="bi bi-github"></i> View Documentation
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

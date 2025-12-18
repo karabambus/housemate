@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome - {{ app_name }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="row align-items-center py-5">
+    <div class="col-lg-6">
+        <h1 class="display-4 fw-bold text-primary">
+            <i class="bi bi-house-heart-fill"></i>
+            Welcome to HouseMate
+        </h1>
+        <p class="lead text-muted">
+            The smart solution for managing shared student housing.
+            Split bills fairly, organize tasks, and keep your household running smoothly.
+        </p>
+        <div class="d-grid gap-2 d-md-flex">
+            <button class="btn btn-primary btn-lg" onclick="alert('Register coming soon!')">
+                <i class="bi bi-person-plus"></i> Get Started
+            </button>
+            <button class="btn btn-outline-primary btn-lg" onclick="alert('Login coming soon!')">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+            </button>
+        </div>
+    </div>
+    <div class="col-lg-6 text-center">
+        <i class="bi bi-house-door" style="font-size: 200px; color: #0d6efd;"></i>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row my-5">
+    <div class="col-12">
+        <h2 class="text-center mb-5">Key Features</h2>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-receipt text-primary" style="font-size: 48px;"></i>
+                <h5 class="card-title mt-3">Fair Cost Distribution</h5>
+                <p class="card-text">
+                    Split bills using multiple strategies: equal split, percentage, or custom amounts.
+                    Perfect for rent, utilities, and shared expenses.
+                </p>
+                <span class="badge bg-success">SOLID Principles Demo</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-cart text-primary" style="font-size: 48px;"></i>
+                <h5 class="card-title mt-3">Shared Shopping Lists</h5>
+                <p class="card-text">
+                    Create and manage shopping lists collaboratively.
+                    Mark items as completed and keep everyone in sync.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="bi bi-check2-square text-primary" style="font-size: 48px;"></i>
+                <h5 class="card-title mt-3">Task Management</h5>
+                <p class="card-text">
+                    Assign household chores fairly, track completion, and ensure everyone contributes equally.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SOLID Principles Section -->
+<div class="row my-5">
+    <div class="col-12">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h3 class="card-title text-center mb-4">
+                    <i class="bi bi-code-square"></i>
+                    Built with SOLID Principles
+                </h3>
+                <p class="text-center text-muted mb-4">
+                    This project demonstrates all 5 SOLID principles in object-oriented design
+                </p>
+                <div class="row text-center">
+                    <div class="col-md mb-3">
+                        <div class="p-3 bg-white rounded">
+                            <span class="badge bg-success mb-2" style="font-size: 1.2em;">S</span>
+                            <h6>Single Responsibility</h6>
+                            <small class="text-muted">One class, one purpose</small>
+                        </div>
+                    </div>
+                    <div class="col-md mb-3">
+                        <div class="p-3 bg-white rounded">
+                            <span class="badge bg-warning mb-2" style="font-size: 1.2em;">O</span>
+                            <h6>Open/Closed</h6>
+                            <small class="text-muted">Extend, don't modify</small>
+                        </div>
+                    </div>
+                    <div class="col-md mb-3">
+                        <div class="p-3 bg-white rounded">
+                            <span class="badge bg-info mb-2" style="font-size: 1.2em;">L</span>
+                            <h6>Liskov Substitution</h6>
+                            <small class="text-muted">Interchangeable parts</small>
+                        </div>
+                    </div>
+                    <div class="col-md mb-3">
+                        <div class="p-3 bg-white rounded">
+                            <span class="badge bg-danger mb-2" style="font-size: 1.2em;">I</span>
+                            <h6>Interface Segregation</h6>
+                            <small class="text-muted">Small, focused interfaces</small>
+                        </div>
+                    </div>
+                    <div class="col-md mb-3">
+                        <div class="p-3 bg-white rounded">
+                            <span class="badge bg-primary mb-2" style="font-size: 1.2em;">D</span>
+                            <h6>Dependency Inversion</h6>
+                            <small class="text-muted">Abstractions over details</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('about') }}" class="btn btn-outline-primary">
+                        Learn More About SOLID <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Login Info -->
+<div class="row my-5">
+    <div class="col-12">
+        <div class="alert alert-info">
+            <h5 class="alert-heading">
+                <i class="bi bi-info-circle"></i> Test the Application
+            </h5>
+            <p class="mb-0">
+                <strong>Email:</strong> marin@test.com &nbsp;|&nbsp; <strong>Password:</strong> test123
+            </p>
+            <hr>
+            <p class="mb-0 small">
+                Demo includes 4 test users, 2 households, and sample bills demonstrating all 3 cost distribution strategies.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - {{ app_name }}{% endblock %}
+
+{% block content %}
+<!-- Welcome Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-5">
+            <i class="bi bi-speedometer2"></i>
+            Welcome back, {{ user_name }}!
+        </h1>
+        <p class="lead text-muted">
+            <i class="bi bi-house-door"></i> {{ household_name }}
+        </p>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="bi bi-receipt"></i> Pending Bills
+                </h6>
+                <h2 class="mb-0">--</h2>
+                <small>Coming soon</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="bi bi-cart"></i> Shopping Items
+                </h6>
+                <h2 class="mb-0">--</h2>
+                <small>Coming soon</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="bi bi-check2-square"></i> Pending Tasks
+                </h6>
+                <h2 class="mb-0">--</h2>
+                <small>Coming soon</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="bi bi-people"></i> Household Members
+                </h6>
+                <h2 class="mb-0">--</h2>
+                <small>Coming soon</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+    <div class="col-12">
+        <h4 class="mb-3">Quick Actions</h4>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-receipt-cutoff text-primary" style="font-size: 48px;"></i>
+                <h5 class="card-title mt-3">Add Bill</h5>
+                <p class="card-text">Record a new expense and distribute costs</p>
+                <button class="btn btn-primary" onclick="alert('Bills module coming soon!')">
+                    <i class="bi bi-plus-circle"></i> Add Bill
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-cart-plus text-success" style="font-size: 48px;"></i>
+                <h5 class="card-title mt-3">Create Shopping List</h5>
+                <p class="card-text">Start a new collaborative shopping list</p>
+                <button class="btn btn-success" onclick="alert('Shopping module coming soon!')">
+                    <i class="bi bi-plus-circle"></i> New List
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-clipboard-check text-warning" style="font-size: 48px;"></i>
+                <h5 class="card-title mt-3">Assign Task</h5>
+                <p class="card-text">Create and assign a household task</p>
+                <button class="btn btn-warning" onclick="alert('Tasks module coming soon!')">
+                    <i class="bi bi-plus-circle"></i> Add Task
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity Placeholder -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-clock-history"></i> Recent Activity
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted text-center py-4">
+                    <i class="bi bi-inbox" style="font-size: 48px;"></i>
+                    <br><br>
+                    Recent activity will appear here once modules are implemented
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
