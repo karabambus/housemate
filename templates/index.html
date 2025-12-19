@@ -15,11 +15,11 @@
             Split bills fairly, organize tasks, and keep your household running smoothly.
         </p>
         <div class="d-grid gap-2 d-md-flex">
-            <button class="btn btn-primary btn-lg" onclick="alert('Register coming soon!')">
+            <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">
                 <i class="bi bi-person-plus"></i> Get Started
-            </button>
-            <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
-                <i class="bi bi-box-arrow-in-right"></i> Login
+            </a>
+            <a href="{{ url_for('bills_list') }}" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-receipt"></i> View Bills Demo
             </a>
         </div>
     </div>
