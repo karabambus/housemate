@@ -148,21 +148,6 @@
             </div>
         </div>
 
-        <!-- SOLID Demonstration Card -->
-        <div class="card shadow-sm mt-4 border-success">
-            <div class="card-body">
-                <h6 class="text-success">
-                    <i class="bi bi-code-square"></i> SOLID Principles in This View
-                </h6>
-                <ul class="small mb-0">
-                    <li><strong>S (Single Responsibility):</strong> BillRepository fetched this bill from database</li>
-                    <li><strong>O (Open/Closed):</strong> Distribution can use any strategy (Equal, Percentage, Fixed)</li>
-                    <li><strong>L (Liskov Substitution):</strong> All strategies produce same output format</li>
-                    <li><strong>D (Dependency Inversion):</strong> BillService coordinated retrieval via abstraction</li>
-                </ul>
-            </div>
-        </div>
-
         <!-- Actions -->
         <div class="mt-4 d-flex gap-2">
             <a href="{{ url_for('bills_list') }}" class="btn btn-secondary">

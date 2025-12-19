@@ -78,25 +78,7 @@
         </div>
         {% endif %}
 
-        <!-- SOLID Demonstration Info -->
-        <div class="card mt-4 border-success">
-            <div class="card-body">
-                <h5 class="card-title text-success">
-                    <i class="bi bi-code-square"></i> SOLID Principles in Action
-                </h5>
-                <p class="mb-2">This bills module demonstrates all 5 SOLID principles:</p>
-                <ul class="small">
-                    <li><strong>S</strong> - Single Responsibility: BillRepository (DB), BillValidator (validation), BillService (coordination)</li>
-                    <li><strong>O</strong> - Open/Closed: Add new distribution strategies without modifying CostCalculator</li>
-                    <li><strong>L</strong> - Liskov Substitution: All distribution strategies are interchangeable</li>
-                    <li><strong>I</strong> - Interface Segregation: Small focused interfaces (IValidator, IBillRepository, ICostDistributionStrategy)</li>
-                    <li><strong>D</strong> - Dependency Inversion: BillService depends on abstractions via constructor injection</li>
-                </ul>
-                <a href="{{ url_for('about') }}" class="btn btn-sm btn-outline-success">
-                    Learn More About SOLID
-                </a>
-            </div>
-        </div>
+       
     </div>
 </div>
 {% endblock %}
