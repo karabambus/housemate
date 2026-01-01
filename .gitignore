@@ -45,3 +45,7 @@ static/uploads/*
 
 # Docker
 .docker/
+
+# Claude Code
+.claude/
+*.claude_code
