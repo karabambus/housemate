@@ -16,16 +16,19 @@ import config
 
 
 class DatabaseConnection:
-    """
-    Manages SQLite database connections.
 
-    SOLID Principle: Single Responsibility (S)
-    - Only handles database connection management
-    - Does NOT handle business logic, validation, or HTTP requests
-    """
+    _instance = None
+    _initialized = False
+
+    def __new__(cls, db_path: Optional[str] = None):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
 
     def __init__(self, db_path: Optional[str] = None):
-        self.db_path = db_path or str(config.DATABASE_PATH)
+        if not self._initialized:
+            self._initialized = True
+            self.db_path = db_path or str(config.DATABASE_PATH)
 
     @contextmanager
     def get_connection(self):
