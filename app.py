@@ -105,7 +105,8 @@ def bills_create():
                 params=params
             )
 
-            flash(f'Bill "{title}" created and distributed successfully!', 'success')
+            distribution_text = ", ".join([f"User {uid}: ${amt:.2f}" for uid, amt in distribution.items()])
+            flash(f'Bill "{title}" created! Distribution: {distribution_text}', 'success')
             return redirect(url_for('bills_detail', bill_id=bill_id))
 
         except ValueError as e:
