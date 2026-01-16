@@ -1,5 +1,6 @@
 from flask import Flask, render_template, session, redirect, url_for, flash, request
 from flask_wtf.csrf import CSRFProtect
+from flask_cors import CORS
 from src.facades.housemate_facade import HouseMateFacade
 from pathlib import Path
 import config
@@ -9,6 +10,10 @@ app.config.from_object(config)
 
 # Initialize CSRF protection
 csrf = CSRFProtect(app)
+
+# Initialize CORS (Cross-Origin Resource Sharing) with restrictive configuration
+if config.CORS_ENABLED:
+    CORS(app, resources={r"/*": config.CORS_CONFIG})
 
 Path(config.UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
 

@@ -40,6 +40,22 @@ CSP_DIRECTIVES = {
     'form-action': ["'self'"],
 }
 
+# CORS Configuration (Cross-Origin Resource Sharing)
+# By default, CORS is restricted - only same-origin requests allowed
+CORS_ENABLED = True
+CORS_CONFIG = {
+    'origins': [
+        'http://localhost:5000',
+        'http://127.0.0.1:5000',
+        'http://localhost:3000',  # For frontend development if separate
+    ],
+    'methods': ['GET', 'POST', 'OPTIONS'],
+    'allow_headers': ['Content-Type', 'Authorization', 'X-CSRF-Token'],
+    'supports_credentials': True,
+    'max_age': 3600,  # 1 hour
+    'send_wildcard': False,  # Do NOT use wildcard '*'
+}
+
 # Application
 APP_NAME = 'HouseMate'
 VERSION = '1.0.0'
