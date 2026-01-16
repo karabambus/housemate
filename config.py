@@ -26,6 +26,20 @@ SESSION_TYPE = 'filesystem'
 WTF_CSRF_ENABLED = True
 WTF_CSRF_TIME_LIMIT = None  # No time limit for CSRF tokens
 
+# Content Security Policy
+CSP_ENABLED = True
+CSP_DIRECTIVES = {
+    'default-src': ["'self'"],
+    'script-src': ["'self'", 'cdn.jsdelivr.net'],
+    'style-src': ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net'],
+    'img-src': ["'self'", 'data:', 'https:'],
+    'font-src': ["'self'", 'cdn.jsdelivr.net'],
+    'connect-src': ["'self'"],
+    'frame-ancestors': ["'none'"],
+    'base-uri': ["'self'"],
+    'form-action': ["'self'"],
+}
+
 # Application
 APP_NAME = 'HouseMate'
 VERSION = '1.0.0'

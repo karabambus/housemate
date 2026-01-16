@@ -163,6 +163,51 @@ def internal_server_error(e):
     return render_template('500.html'), 500
 
 
+@app.after_request
+def set_security_headers(response):
+    """Set security headers to protect against common web vulnerabilities."""
+
+    # Content Security Policy - restrict resource loading
+    csp = (
+        "default-src 'self'; "
+        "script-src 'self' cdn.jsdelivr.net; "
+        "style-src 'self' 'unsafe-inline' cdn.jsdelivr.net; "
+        "img-src 'self' data: https:; "
+        "font-src 'self' cdn.jsdelivr.net; "
+        "connect-src 'self'; "
+        "frame-ancestors 'none'; "
+        "base-uri 'self'; "
+        "form-action 'self'"
+    )
+    response.headers['Content-Security-Policy'] = csp
+
+    # Prevent MIME type sniffing
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+
+    # Prevent clickjacking attacks
+    response.headers['X-Frame-Options'] = 'DENY'
+
+    # Enable XSS protection in older browsers
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+
+    # Control referrer information
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+
+    # Permissions Policy (formerly Feature Policy)
+    response.headers['Permissions-Policy'] = (
+        'geolocation=(), '
+        'microphone=(), '
+        'camera=(), '
+        'payment=(), '
+        'usb=(), '
+        'magnetometer=(), '
+        'gyroscope=(), '
+        'accelerometer=()'
+    )
+
+    return response
+
+
 @app.context_processor
 def inject_config():
     return {
