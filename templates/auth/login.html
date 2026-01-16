@@ -13,6 +13,8 @@
                 </h2>
 
                 <form method="POST" action="{{ url_for('login') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    
                     <!-- Email -->
                     <div class="mb-3">
                         <label for="email" class="form-label">Email Address</label>

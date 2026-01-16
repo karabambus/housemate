@@ -12,6 +12,8 @@
                 </h2>
 
                 <form method="POST" action="{{ url_for('bills_create') }}" id="billForm">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                    
                     <!-- Bill Details -->
                     <div class="mb-3">
                         <label for="title" class="form-label">Bill Title <span class="text-danger">*</span></label>

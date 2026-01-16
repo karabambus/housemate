@@ -1,10 +1,14 @@
 from flask import Flask, render_template, session, redirect, url_for, flash, request
+from flask_wtf.csrf import CSRFProtect
 from src.facades.housemate_facade import HouseMateFacade
 from pathlib import Path
 import config
 
 app = Flask(__name__)
 app.config.from_object(config)
+
+# Initialize CSRF protection
+csrf = CSRFProtect(app)
 
 Path(config.UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
 

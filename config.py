@@ -22,6 +22,10 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'pdf'}
 # Session
 SESSION_TYPE = 'filesystem'
 
+# CSRF Protection
+WTF_CSRF_ENABLED = True
+WTF_CSRF_TIME_LIMIT = None  # No time limit for CSRF tokens
+
 # Application
 APP_NAME = 'HouseMate'
 VERSION = '1.0.0'
